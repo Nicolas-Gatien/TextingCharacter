@@ -14,7 +14,6 @@ def get_transcript():
         transcript += f"{message['name']}: {message['content']}"
 
     return transcript
-
 def get_prompt():
     prompt = f"""
     Character is a conversational person.
@@ -22,15 +21,15 @@ def get_prompt():
     Here is a conversation transcript between Nico and Character:
     {get_transcript()}
     
-    What would Character say next?
-    <insert line>
+    How would Character continue his last sentence?
+    Character: <insert line>
     """
 
     return prompt
 
 def generate_response():
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "system", "content": get_prompt()}],
         stream=True
     )
@@ -45,7 +44,6 @@ def generate_response():
         if last_token in sentence_end:
             sentence = sentence.strip()
             context.append({"role": "assistant", "content": sentence, "name": "Character"})
-            time.sleep(0.02 * len(sentence))
             print(sentence)
             generate_response()
         last_token = token
